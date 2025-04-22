@@ -37,7 +37,6 @@ def generate_summary(raw_text, min_chars=30, max_chars=130):
 
 def main():
     st.title("AI Article Summarizer")
-    st.write("This app fetches an article from a URL and generates a summary using AI.")
 
 
     article_url = st.text_input("Enter article URL:")
