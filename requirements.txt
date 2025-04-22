@@ -1,4 +1,7 @@
-streamlit==1.18.0
-newspaper3k==0.2.8
-transformers==4.28.0
-torch==2.1.0
+streamlit
+newspaper3k
+transformers
+torch
+"lxml[html_clean]"
+altair==4.2.2
+
