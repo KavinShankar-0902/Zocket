@@ -1,14 +1,8 @@
 import streamlit as st
 from newspaper import Article
 from transformers import pipeline
-import warnings
-import logging
 
-warnings.filterwarnings("ignore")
-logging.getLogger("transformers").setLevel(logging.ERROR)
-
-
-def fetch_article_text(link):
+def get_url_text(link):
     try:
         news = Article(link)
         news.download()
@@ -22,10 +16,10 @@ def fetch_article_text(link):
 
 @st.cache_resource
 def load_summarizer():
-    return pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
+    return pipeline("summarization", model="sshleifer/distilbart-cnn-12-6", device = -1)
 
 
-def generate_summary(raw_text, min_chars=30, max_chars=130):
+def summary(raw_text, min_chars, max_chars):
     summarizer_pipeline = load_summarizer()
 
     if len(raw_text) > 1024:
@@ -40,27 +34,27 @@ def generate_summary(raw_text, min_chars=30, max_chars=130):
     return summary_output[0]['summary_text']
 
 
-def extract_key_information(title, content, min_length, max_length):
-    summary = generate_summary(content, min_chars=min_length, max_chars=max_length)
-    return summary
+def extract_key_info(title, content, min_length, max_length):
+    s = summary(content, min_chars=min_length, max_chars=max_length)
+    return s
 
 
 def main():
-    st.title("📰 AI Article Summarizer")
+    st.title("📰 AI Article Summarizer using Web Scraping")
 
     article_url = st.text_input("Enter article URL:")
-    min_length = st.slider("Minimum summary length (characters)", 30, 500, 30)
-    max_length = st.slider("Maximum summary length (characters)", 100, 900, 130)
+    min_length = st.slider("Min summary length", 30, 500, 30)
+    max_length = st.slider("Max summary length", 100, 900, 130)
 
     if st.button("Summarize"):
         if article_url:
-            with st.spinner("Fetching article..."):
-                title, article_text = fetch_article_text(article_url)
+            with st.spinner("Fetching URL content..."):
+                title, article_text =  get_url_text(article_url)
 
             if article_text:
                 with st.spinner("Generating summary..."):
 
-                    summary_result = extract_key_information(title, article_text, min_length, max_length)
+                    summary_result = extract_key_info(title, article_text, min_length, max_length)
                 st.subheader("📝 Key Information")
                 st.success(summary_result)
             else:
