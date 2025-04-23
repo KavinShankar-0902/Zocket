@@ -1,7 +1,7 @@
 streamlit
 newspaper3k
-transformers
-torch
+transformers==4.34.0
+torch==2.4.0
 "lxml[html_clean]"
 altair==4.2.2
-
+numpy==1.26.4
