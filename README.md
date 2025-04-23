@@ -35,4 +35,4 @@ python -m venv .venv
 source .venv/bin/activate
 
 # 3. Install dependencies
-pip install streamlit newspaper3k transformers torch
+pip install -r requirements.txt
